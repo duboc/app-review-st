@@ -41,26 +41,7 @@ def log_action(action):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     st.session_state.log.append(f"{timestamp}: {action}")
 
-def analyze_sentiment(text, language, country):
-    prompt = f"""
-    Analyze the sentiment of the following text and classify it as positive, negative, or neutral. 
-    Also provide a brief explanation for the classification.
-    Consider that this text is a review for an app in the {language} language from {country}.
 
-    Text: "{text}"
-
-    Provide the sentiment (positive/negative/neutral) followed by a brief explanation.
-    """
-    
-    response = model.generate_content(
-        prompt,
-        generation_config={
-            "max_output_tokens": 8192,
-            "temperature": 0.4,
-            "top_p": 1
-        }
-    )
-    return response.text
 
 def main():
     #st.set_page_config(page_title="Google Play Store Review Scraper & Analyzer", page_icon="📱", layout="wide")
