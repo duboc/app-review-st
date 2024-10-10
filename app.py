@@ -1,29 +1,9 @@
 import streamlit as st
 import pandas as pd
 from google_play_scraper import Sort, reviews
-import io
 from datetime import datetime
-import os
-import vertexai
-from vertexai.generative_models import (
-    GenerationConfig,
-    GenerativeModel,
-    HarmCategory,
-    HarmBlockThreshold,
-)
+from pathlib import Path
 import matplotlib.pyplot as plt
-
-# Initialize Vertex AI
-PROJECT_ID = "conventodapenha"  # Replace with your Google Cloud Project ID
-LOCATION = "us-central1"  # Replace with your preferred region
-
-@st.cache_resource
-def init_vertex_ai():
-    vertexai.init(project=PROJECT_ID, location=LOCATION)
-    model = GenerativeModel("gemini-1.5-pro-001")
-    return model
-
-model = init_vertex_ai()
 
 def scrape_reviews(app_id, reviews_count, language, country):
     result, token = reviews(
@@ -33,7 +13,10 @@ def scrape_reviews(app_id, reviews_count, language, country):
         sort=Sort.NEWEST,
         count=reviews_count,
     )
-    return pd.DataFrame(result)
+    df = pd.DataFrame(result)
+    #remove user names for confidentiality
+    df = df.drop('userName', axis=1)
+    return df
 
 def log_action(action):
     if 'log' not in st.session_state:
@@ -51,7 +34,7 @@ def main():
     if 'sentiment_results' not in st.session_state:
         st.session_state.sentiment_results = {}
 
-    tabs = st.tabs(["Scraper", "Results", "Sentiment Analysis", "Log"])
+    tabs = st.tabs(["Scraper", "Results", "Sample Prompts", "Log"])
 
     with tabs[0]:
         st.title("Google Play Store Review Scraper")
@@ -115,57 +98,8 @@ def main():
             st.info("No results available. Use the Scraper tab to fetch reviews.")
 
     with tabs[2]:
-        st.title("Sentiment Analysis")
-        if st.session_state.results:
-            app_id = st.selectbox("Select App ID for Sentiment Analysis", list(st.session_state.results.keys()))
-            if app_id:
-                result = st.session_state.results[app_id]
-                df = result['dataframe']
-                language = result['language']
-                country = result['country']
-
-                if st.button("Analyze Sentiment"):
-                    if app_id not in st.session_state.sentiment_results:
-                        st.session_state.sentiment_results[app_id] = {'analyzed': False}
-
-                    if not st.session_state.sentiment_results[app_id]['analyzed']:
-                        with st.spinner("Analyzing sentiment... This may take a while."):
-                            sentiments = []
-                            for index, row in df.iterrows():
-                                sentiment_result = analyze_sentiment(row['content'], language, country)
-                                sentiments.append(sentiment_result)
-
-                            df['sentiment_analysis'] = sentiments
-                            st.session_state.sentiment_results[app_id] = {
-                                'analyzed': True,
-                                'dataframe': df,
-                                'language': language,
-                                'country': country
-                            }
-
-                        log_action(f"Analyzed sentiment for {len(df)} reviews of app {app_id}")
-
-                    analyzed_df = st.session_state.sentiment_results[app_id]['dataframe']
-                    
-                    st.success("Sentiment analysis completed!")
-                    
-                    # Display results in an expander
-                    with st.expander("Sentiment Analysis Results", expanded=True):
-                        for _, row in analyzed_df.iterrows():
-                            st.write(f"Review: {row['content']}")
-                            st.write(f"Sentiment Analysis: {row['sentiment_analysis']}")
-                            st.divider()
-
-                        # Allow CSV download of analyzed data
-                        csv = analyzed_df.to_csv(index=False)
-                        st.download_button(
-                            label="Download Analyzed CSV",
-                            data=csv,
-                            file_name=f"{app_id}_analyzed_reviews.csv",
-                            mime="text/csv",
-                        )
-        else:
-            st.info("No results available for sentiment analysis. Use the Scraper tab to fetch reviews first.")
+        txt = Path('prompts.md').read_text()
+        st.markdown(body=txt)
 
     with tabs[3]:
         st.title("Activity Log")
