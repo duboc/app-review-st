@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from google_play_scraper import Sort, reviews_all
+from google_play_scraper import Sort, reviews
 import io
 from datetime import datetime
 import os
@@ -26,14 +26,14 @@ def init_vertex_ai():
 model = init_vertex_ai()
 
 def scrape_reviews(app_id, reviews_count, language, country):
-    reviews = reviews_all(
+    result, token = reviews(
         app_id,
         lang=language,
         country=country,
         sort=Sort.NEWEST,
-        count=reviews_count
+        count=reviews_count,
     )
-    return pd.DataFrame(reviews)
+    return pd.DataFrame(result)
 
 def log_action(action):
     if 'log' not in st.session_state:
@@ -66,7 +66,7 @@ def main():
             if app_id:
                 with st.spinner("Scraping reviews... This may take a while."):
                     df = scrape_reviews(app_id, reviews_count, language, country)
-                
+
                 st.success(f"Successfully scraped {len(df)} reviews!")
 
                 # Save results to session state
