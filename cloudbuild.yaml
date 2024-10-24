@@ -1,0 +1,32 @@
+steps:
+  # Install dependencies
+  - name: python:3.12
+    entrypoint: pip
+    args: ["install", "-r", "requirements.txt", "--user"]
+  
+  # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 
+           'us-central1-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/${_SERVICE_NAME}', '.']
+
+  # Docker push to Google Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push',  '${_REPO_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/${_SERVICE_NAME}']
+  
+  # Deploy to Cloud Run
+  - name: google/cloud-sdk
+    args: ['gcloud', 'run', 'deploy', '${_SERVICE_NAME}', 
+           '--image=${_REPO_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/${_SERVICE_NAME}', 
+           '--region', '${_SERVICE_REGION}', '--platform', 'managed', 
+           '--update-env-vars=GCP_PROJECT=${PROJECT_ID},GCP_REGION=${_SERVICE_REGION}', 
+           '--allow-unauthenticated']
+
+substitutions:
+  _ARTIFACT_REGISTRY_REPO: agile-demos
+  _REPO_LOCATION: us-central1
+  _SERVICE_NAME: play-reviews-demo
+  _SERVICE_REGION: us-central1
+
+# gcloud artifacts repositories create dev-lifecycle --repository-format=docker --location=us-central1 --description="Gemini Developer Lifecycle Demo"
+# gcloud builds submit . --config=./cloudbuild.yaml --substitutions SHORT_SHA=1.0
+

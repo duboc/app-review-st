@@ -1,18 +1,25 @@
 import streamlit as st
 import pandas as pd
-from google_play_scraper import Sort, reviews
+from google_play_scraper import Sort, reviews, reviews_all
 from datetime import datetime
 from pathlib import Path
 import matplotlib.pyplot as plt
 
 def scrape_reviews(app_id, reviews_count, language, country):
-    result, token = reviews(
+    if language == "All":
+        language = ""
+    if country == "All":
+        country = ""
+
+    result = reviews_all(
         app_id,
         lang=language,
         country=country,
         sort=Sort.NEWEST,
         count=reviews_count,
     )
+    print(result)
+
     df = pd.DataFrame(result)
     #remove user names for confidentiality
     df = df.drop('userName', axis=1)
@@ -41,9 +48,9 @@ def main():
 
         # User inputs
         app_id = st.text_input("Enter the app ID (e.g., com.example.app):")
-        reviews_count = st.number_input("Number of reviews to scrape:", min_value=1, max_value=10000, value=100)
-        language = st.selectbox("Select language:", ["en", "es", "fr", "de", "it", "pt"])
-        country = st.selectbox("Select country:", ["us", "gb", "ca", "au", "in", "es", "fr", "de", "it", "br"])
+        reviews_count = st.number_input("Number of reviews to scrape:", min_value=1, max_value=10000, value=1000)
+        language = st.selectbox("Select language:", ["", "All", "en", "es", "fr", "de", "it", "pt"])
+        country = st.selectbox("Select country:", ["", "All", "us", "gb", "ca", "au", "in", "es", "fr", "de", "it", "br"])
 
         if st.button("Scrape Reviews"):
             if app_id:
