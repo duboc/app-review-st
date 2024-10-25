@@ -11,18 +11,18 @@ def scrape_reviews(app_id, reviews_count, language, country):
     if country == "All":
         country = ""
 
-    result = reviews_all(
+    result, _ = reviews(
         app_id,
         lang=language,
         country=country,
         sort=Sort.NEWEST,
         count=reviews_count,
     )
-    print(result)
 
     df = pd.DataFrame(result)
     #remove user names for confidentiality
     df = df.drop('userName', axis=1)
+    df = df.drop('userImage', axis=1)
     return df
 
 def log_action(action):
