@@ -20,9 +20,11 @@ def scrape_reviews(app_id, reviews_count, language, country):
     )
 
     df = pd.DataFrame(result)
-    #remove user names for confidentiality
-    df = df.drop('userName', axis=1)
-    df = df.drop('userImage', axis=1)
+    if len(df) > 0:
+        #remove user names for confidentiality
+        df = df.drop('userName', axis=1)
+        df = df.drop('userImage', axis=1)
+
     return df
 
 def log_action(action):
@@ -57,8 +59,6 @@ def main():
                 with st.spinner("Scraping reviews... This may take a while."):
                     df = scrape_reviews(app_id, reviews_count, language, country)
 
-                st.success(f"Successfully scraped {len(df)} reviews!")
-
                 # Save results to session state
                 st.session_state.results[app_id] = {
                     'dataframe': df,
@@ -67,20 +67,22 @@ def main():
                     'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 }
 
-                # Log the action
-                log_action(f"Scraped {len(df)} reviews for app {app_id}")
+                if len(df) > 0:
+                    st.success(f"Successfully scraped {len(df)} reviews!")
 
-                # Display the dataframe
-                st.dataframe(df)
+                    st.dataframe(df)
 
-                # Allow CSV download
-                csv = df.to_csv(index=False)
-                st.download_button(
-                    label="Download CSV",
-                    data=csv,
-                    file_name=f"{app_id}_reviews.csv",
-                    mime="text/csv",
-                )
+                    # Allow CSV download
+                    csv = df.to_csv(index=False)
+                    st.download_button(
+                        label="Download CSV",
+                        data=csv,
+                        file_name=f"{app_id}_reviews.csv",
+                        mime="text/csv",
+                    )
+                else:
+                    st.warning(
+                        "No reviews were scraped. Please check your inputs.")
             else:
                 st.error("Please enter an app ID.")
                 log_action("Attempted to scrape without entering an app ID")
