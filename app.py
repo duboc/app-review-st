@@ -43,7 +43,7 @@ def main():
     if 'sentiment_results' not in st.session_state:
         st.session_state.sentiment_results = {}
 
-    tabs = st.tabs(["Scraper", "Results", "Sample Prompts", "Log"])
+    tabs = st.tabs(["Scraper", "Results", "Sample Prompts", "Artifacts", "Log"])
 
     with tabs[0]:
         st.title("Google Play Store Review Scraper")
@@ -111,6 +111,11 @@ def main():
         st.markdown(body=txt)
 
     with tabs[3]:
+        st.title("Artifacts")
+        st.link_button("Game Video Download", 
+                       "https://storage.googleapis.com/damadei-public-bucket/supertux.mp4")
+
+    with tabs[4]:
         st.title("Activity Log")
         if 'log' in st.session_state and st.session_state.log:
             for entry in reversed(st.session_state.log):
