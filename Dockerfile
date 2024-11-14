@@ -11,7 +11,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Set environment variables (replace with your values)
 ENV STREAMLIT_SERVER_ENABLE_STATIC_SERVING=true
-ENV DEMO_ASSETS_BUCKET=bucket-name
 
 EXPOSE 8080
 
