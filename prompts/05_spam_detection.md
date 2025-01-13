@@ -2,6 +2,10 @@
 
 Analise os reviews fornecidos e faça uma investigação detalhada para identificar possíveis manipulações, spam e inconsistências, considerando os seguintes aspectos:
 
+O header do csv:
+reviewId,content,score,thumbsUpCount,reviewCreatedVersion,at,replyContent,repliedAt,appVersion
+
+
 1. Análise Estatística:
 - Distribuição dos ratings (1-5 estrelas)
 - Comprimento médio dos reviews

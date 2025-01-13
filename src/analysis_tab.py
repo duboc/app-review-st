@@ -1,3 +1,17 @@
+# Copyright 2024
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -46,12 +60,17 @@ def render_analysis_tab():
                                 # Convert DataFrame to CSV string
                                 csv_data = result['dataframe'].to_csv(index=False)
                                 
-                                # Get both analyses
+                                # Add language instruction to both prompts
+                                language_instruction = f"\nPlease provide the analysis in {st.session_state.analysis_language}."
+                                text_prompt = text_prompt + language_instruction
+                                json_prompt = json_prompt + language_instruction
+                                
                                 text_full_prompt = f"{text_prompt}\n\nData:\n{csv_data}"
                                 json_full_prompt = f"{json_prompt}\n\nData:\n{csv_data}"
                                 
-                                text_response = st.session_state.gemini_client.generate_content(text_full_prompt)
-                                json_response = st.session_state.gemini_client.generate_content(json_full_prompt)
+                                with st.spinner(f"Analyzing reviews for spam in {st.session_state.analysis_language}..."):
+                                    text_response = st.session_state.gemini_client.generate_content(text_full_prompt)
+                                    json_response = st.session_state.gemini_client.generate_content(json_full_prompt)
                                 
                                 # Save analysis to history
                                 timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -137,23 +156,30 @@ def render_analysis_tab():
                                 # Get the prompt text
                                 prompt = get_prompt_by_number(i)
                                 
+                                # Add language instruction to prompt
+                                language_instruction = f"\nPlease provide the analysis in {st.session_state.analysis_language}."
+                                prompt = prompt + language_instruction
+                                
                                 # Convert DataFrame to CSV string
                                 csv_data = result['dataframe'].to_csv(index=False)
                                 
                                 # Combine prompt with data
                                 full_prompt = f"{prompt}\n\nData:\n{csv_data}"
                                 
-                                with st.spinner("Analyzing reviews..."):
+                                with st.spinner(f"Analyzing reviews in {st.session_state.analysis_language}..."):
                                     response = st.session_state.gemini_client.generate_content(full_prompt)
                                     
-                                    # Save analysis to history
+                                    # Save analysis to history with language info
                                     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                     if analysis_key not in st.session_state.analysis_history:
                                         st.session_state.analysis_history[analysis_key] = {}
-                                    st.session_state.analysis_history[analysis_key][timestamp] = response
+                                    st.session_state.analysis_history[analysis_key][timestamp] = {
+                                        'response': response,
+                                        'language': st.session_state.analysis_language
+                                    }
                                     
                                     # Show the new analysis in an expander
-                                    with st.expander(f"Analysis from {timestamp}", expanded=True):
+                                    with st.expander(f"Analysis from {timestamp} ({st.session_state.analysis_language})", expanded=True):
                                         st.markdown(response)
                                     
                             except Exception as e:
