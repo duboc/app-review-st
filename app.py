@@ -633,8 +633,26 @@ def main():
             st.info("No data available for marketing campaign generation. Please scrape some reviews first.")
 
     with tabs[6]:
-        txt = Path('prompts.md').read_text()
-        st.markdown(body=txt)
+        st.title("Sample Prompts")
+        
+        # Get all prompt files from the prompts directory
+        prompts_dir = Path('prompts')
+        prompt_files = sorted([f for f in prompts_dir.glob('[0-9][0-9]*.md')])
+        
+        for prompt_file in prompt_files:
+            try:
+                # Extract prompt number from filename (assuming format like "01_name.md")
+                prompt_num = prompt_file.stem.split('_')[0]
+                
+                # Read prompt content
+                prompt_content = prompt_file.read_text()
+                
+                # Create expandable section for each prompt
+                with st.expander(f"Prompt {prompt_num}"):
+                    st.markdown(prompt_content)
+                    
+            except Exception as e:
+                st.error(f"Error loading prompt {prompt_file}: {str(e)}")
 
     with tabs[7]:
         st.title("Artifacts")
