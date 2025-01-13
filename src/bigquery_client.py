@@ -5,44 +5,25 @@ from google.protobuf import descriptor_pb2
 import pandas as pd
 from typing import Dict, List
 import uuid
-import re
 
 class BigQueryStorageWriter:
     def __init__(self):
         self.write_client = bigquery_storage_v1.BigQueryWriteClient()
 
-    def normalize_column_name(self, name: str) -> str:
-        """Convert column names to protobuf-compatible format."""
-        # Convert camelCase to snake_case
-        name = re.sub('([a-z0-9])([A-Z])', r'\1_\2', name).lower()
-        # Replace any remaining invalid characters with underscore
-        name = re.sub('[^a-z0-9_]', '_', name)
-        return name
-
-    def normalize_dataframe(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Normalize all column names in the DataFrame."""
-        return df.rename(columns={col: self.normalize_column_name(col) for col in df.columns})
-
     def create_row_data(self, row: Dict) -> bytes:
         """Convert a row dictionary to protobuf serialized bytes."""
         # Create a unique review ID to prevent duplicates
-        row['review_id'] = str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{row['app_id']}_{row['review_id']}"))
+        row['review_id'] = str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{row['app_id']}_{row['reviewId']}"))
         
         # Convert the row to protobuf format
         proto_row = types.ProtoRows()
         for key, value in row.items():
-            # Convert value to string if it's not already
-            if not isinstance(value, str):
-                value = str(value)
             setattr(proto_row, key, value)
         
         return proto_row.SerializeToString()
 
     def append_rows(self, project_id: str, dataset_id: str, table_id: str, df: pd.DataFrame):
         """Append rows from a DataFrame to BigQuery using Storage Write API."""
-        # Normalize column names
-        df = self.normalize_dataframe(df)
-        
         parent = self.write_client.table_path(project_id, dataset_id, table_id)
         stream_name = f'{parent}/_default'
         
