@@ -60,3 +60,6 @@ appVersion	"Login Issues" Count	% of reviews by appVersion
 Version 1.0	80	21%
 Version 1.1	110	44%
 ....	....	....
+
+
+and do not generate any python code for this. 

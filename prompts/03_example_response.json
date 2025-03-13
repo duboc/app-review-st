@@ -1,0 +1,158 @@
+{
+  "executive_summary": "This analysis identified significant usability and performance issues affecting user satisfaction. The most critical problem is the frequent app crashes (rated 'Critical'), which has been increasing over the last quarter. Users strongly request improved navigation and better offline features. Several quick wins were identified that could improve user sentiment, which has been generally declining since Q1 2023.",
+  "problem_analysis": {
+    "table": [
+      {
+        "category": "App Crashes",
+        "frequency": 85,
+        "severity": "Critical", 
+        "example_reviews": [
+          {"content": "The app keeps crashing whenever I try to save my progress. Very frustrating!", "at": "2023-10-26"},
+          {"content": "Crashed five times in one session. Can't use this anymore until it's fixed.", "at": "2023-09-15"}
+        ],
+        "trend": "Increasing",
+        "affected_user_segments": ["Power Users", "New Users"]
+      },
+      {
+        "category": "Slow Performance",
+        "frequency": 62,
+        "severity": "Major", 
+        "example_reviews": [
+          {"content": "Everything takes forever to load, especially on older devices.", "at": "2023-08-12"},
+          {"content": "Laggy interface makes it hard to use. Please optimize!", "at": "2023-09-20"}
+        ],
+        "trend": "Stable",
+        "affected_user_segments": ["Users with Older Devices"]
+      },
+      {
+        "category": "Navigation Issues",
+        "frequency": 47,
+        "severity": "Major", 
+        "example_reviews": [
+          {"content": "Too many clicks to get to the most common features. UX needs work.", "at": "2023-07-05"}
+        ],
+        "trend": "Decreasing",
+        "affected_user_segments": ["New Users"]
+      },
+      {
+        "category": "Battery Drain",
+        "frequency": 34,
+        "severity": "Minor", 
+        "example_reviews": [
+          {"content": "This app drains my battery faster than any other app I use.", "at": "2023-08-19"}
+        ],
+        "trend": "Increasing",
+        "affected_user_segments": ["Mobile Users"]
+      },
+      {
+        "category": "Login Problems",
+        "frequency": 28,
+        "severity": "Major", 
+        "example_reviews": [
+          {"content": "Can't log in with my Google account anymore. Please fix!", "at": "2023-10-01"}
+        ],
+        "trend": "Increasing",
+        "affected_user_segments": ["All Users"]
+      }
+    ],
+    "trend_summary": "Problem reports have increased by 23% over the last quarter, with app crashes and login issues showing the most concerning upward trends. Performance issues remain constant, while navigation complaints have decreased following the UI update in August.",
+    "critical_problems_count": 1,
+    "most_affected_segments": ["New Users", "Power Users"]
+  },
+  "suggestion_analysis": {
+    "table": [
+      {
+        "suggestion_group": "Improved Navigation",
+        "frequency": 72,
+        "estimated_impact": "High",
+        "implementation_difficulty": "Medium",
+        "example_reviews": [
+          {"content": "Please add a quick access toolbar for commonly used features."},
+          {"content": "The menu structure is confusing. A simpler home screen would help."}
+        ]
+      },
+      {
+        "suggestion_group": "Offline Mode",
+        "frequency": 65,
+        "estimated_impact": "High",
+        "implementation_difficulty": "Hard",
+        "example_reviews": [
+          {"content": "Would love to use basic features without internet connection."},
+          {"content": "Offline support would be a game-changer for travelers like me."}
+        ]
+      },
+      {
+        "suggestion_group": "Dark Mode",
+        "frequency": 58,
+        "estimated_impact": "Medium",
+        "implementation_difficulty": "Easy",
+        "example_reviews": [
+          {"content": "Please add dark mode to reduce eye strain at night."}
+        ]
+      },
+      {
+        "suggestion_group": "More Customization",
+        "frequency": 47,
+        "estimated_impact": "Medium",
+        "implementation_difficulty": "Medium",
+        "example_reviews": [
+          {"content": "Would like to customize the dashboard to show my preferred stats."}
+        ]
+      },
+      {
+        "suggestion_group": "Better Tutorials",
+        "frequency": 35,
+        "estimated_impact": "Medium",
+        "implementation_difficulty": "Easy",
+        "example_reviews": [
+          {"content": "As a new user, I found it hard to learn the app. Better tutorials would help."}
+        ]
+      },
+      {
+        "suggestion_group": "Data Export",
+        "frequency": 28,
+        "estimated_impact": "Low",
+        "implementation_difficulty": "Medium",
+        "example_reviews": [
+          {"content": "Need to export my data to CSV or Excel."}
+        ]
+      }
+    ],
+    "emerging_suggestions": "Requests for keyboard shortcuts and voice commands have emerged in the last month, primarily from power users looking to improve productivity. There's also growing interest in collaborative features.",
+    "high_impact_count": 2,
+    "quick_wins": [
+      "Implement dark mode to improve user satisfaction with minimal development effort",
+      "Add interactive tutorials for new users to reduce the learning curve",
+      "Fix social login issues to immediately reduce frustration"
+    ]
+  },
+  "sentiment_trend_analysis": {
+    "summary": "Overall sentiment has declined by approximately 15% since Q1 2023, with a significant drop following the v2.5 update in July that introduced performance regressions. Recent bug fixes in September have begun to slightly improve sentiment, but not to previous levels.",
+    "period_trends": [
+      {"period": "2023 Q1", "positive_percentage": 68, "negative_percentage": 18, "neutral_percentage": 14},
+      {"period": "2023 Q2", "positive_percentage": 62, "negative_percentage": 25, "neutral_percentage": 13},
+      {"period": "2023 Q3", "positive_percentage": 48, "negative_percentage": 38, "neutral_percentage": 14},
+      {"period": "2023 Q4 (partial)", "positive_percentage": 52, "negative_percentage": 34, "neutral_percentage": 14}
+    ],
+    "significant_events": [
+      {"date": "2023-07-15", "event": "App update v2.5", "sentiment_impact": "Negative"},
+      {"date": "2023-08-10", "event": "UI redesign", "sentiment_impact": "Mixed"},
+      {"date": "2023-09-05", "event": "Bug fix release", "sentiment_impact": "Positive"}
+    ]
+  },
+  "user_segments": {
+    "identified_segments": ["Power Users", "New Users", "Casual Users", "Users with Older Devices", "Mobile Users"],
+    "segment_specific_issues": [
+      {"segment": "New Users", "top_issues": ["Navigation Problems", "Steep Learning Curve", "Onboarding Issues"]},
+      {"segment": "Power Users", "top_issues": ["Performance Limitations", "Lack of Keyboard Shortcuts", "Limited Customization"]},
+      {"segment": "Users with Older Devices", "top_issues": ["Crashes", "Slow Performance", "High Resource Usage"]}
+    ]
+  },
+  "actionable_insights": [
+    "Prioritize fixing app crashes, focusing on memory usage and common crash scenarios reported by users with older devices",
+    "Implement dark mode and better tutorials as quick wins to improve satisfaction with minimal development resources",
+    "Redesign the navigation flow based on user feedback, with special attention to new user experiences",
+    "Develop a limited offline mode for core features to address a major user request",
+    "Consider segmenting the app's functionality to improve performance on older devices while maintaining advanced features for power users"
+  ]
+} 

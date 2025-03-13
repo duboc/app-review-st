@@ -15,6 +15,7 @@
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+import logging
 
 # Load environment variables from .env file
 env_path = Path('.') / '.env'
@@ -25,6 +26,17 @@ class Config:
     GCP_PROJECT = os.getenv('GCP_PROJECT', 'conventodapenha')
     GCP_REGION = os.getenv('GCP_REGION', 'us-central1')
     STREAMLIT_SERVER_PORT = int(os.getenv('STREAMLIT_SERVER_PORT', '8080'))
+    
+    # Logging configuration
+    LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
+    LOG_FORMAT = os.getenv('LOG_FORMAT', '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    LOG_FILE = os.getenv('LOG_FILE', 'app.log')
+    ENABLE_FILE_LOGGING = os.getenv('ENABLE_FILE_LOGGING', 'False').lower() == 'true'
+    
+    # User activity logging
+    LOG_USER_ACTIONS = True
+    LOG_API_CALLS = True
+    LOG_PERFORMANCE = True
 
     @classmethod
     def validate(cls):
@@ -32,4 +44,23 @@ class Config:
         required_vars = ['GCP_PROJECT']
         missing = [var for var in required_vars if not getattr(cls, var)]
         if missing:
-            raise ValueError(f"Missing required environment variables: {', '.join(missing)}") 
+            raise ValueError(f"Missing required environment variables: {', '.join(missing)}")
+    
+    @classmethod
+    def setup_logging(cls):
+        """Configure logging based on settings"""
+        log_level = getattr(logging, cls.LOG_LEVEL.upper(), logging.INFO)
+        
+        # Configure root logger
+        logging.basicConfig(
+            level=log_level,
+            format=cls.LOG_FORMAT
+        )
+        
+        # Add file handler if enabled
+        if cls.ENABLE_FILE_LOGGING:
+            file_handler = logging.FileHandler(cls.LOG_FILE)
+            file_handler.setFormatter(logging.Formatter(cls.LOG_FORMAT))
+            logging.getLogger().addHandler(file_handler)
+        
+        return logging.getLogger('app') 

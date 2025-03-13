@@ -1,85 +1,112 @@
-# Enhanced Problem & Suggestion Analysis of User Reviews (Expanded)
+# Optimized Prompt for User Review Analysis - Flash 2.0 API
 
-Analyze the user reviews within the provided CSV file (containing 'content', 'score', and 'at' columns), focusing on identifying key problems, user suggestions, and their evolution over time. The analysis should deliver actionable insights for developers and product managers.
+**Objective:** Analyze user reviews from a CSV file (columns: 'content', 'score', 'at') to identify problems, suggestions, and trends over time. Deliver actionable insights for developers and product managers.
 
-Analysis Objectives:
+**Analysis Tasks (Ordered by Priority):**
 
-Negative Review Analysis:
+1. **Negative Review Problem Analysis:**
+    * **Sentiment-Based Negativity:**  Analyze 'content' to identify *negative* reviews (ignore 'score' for sentiment).
+    * **Problem Categorization:** Classify negative reviews into these categories:
+        * Bugs/Glitches
+        * Feature Issues
+        * Performance Problems
+        * Usability Issues
+        * Content/Quality Issues
+        * Other (please specify if possible)
+    * **Frequency Count:** Calculate the number of reviews in each problem category.
+    * **Example Reviews:** For each category, provide 2-3 example 'content' excerpts with their 'at' dates.
+    * **Time-Based Trend (Problem Categories):** Analyze if the frequency of each problem category is increasing, decreasing, or stable over time. Indicate trend direction (increasing, decreasing, stable) for each category.
+    * **Severity Classification:** Classify each problem category as 'Critical', 'Major', or 'Minor' based on its impact on user experience.
 
-Problem Extraction and Categorization: Extract all negative reviews (based on sentiment derived from 'content', as 'score' might be unreliable) and identify recurring complaints. Categorize these complaints into specific types, such as:
+2. **Suggestion & Feature Request Analysis:**
+    * **Suggestion Extraction:** Extract suggestions and feature requests from *all* reviews (positive, negative, neutral).
+    * **Suggestion Grouping:** Group extracted suggestions into logical themes (e.g., "Payment Options," "Search Functionality," "Customization"). Aim for concise theme names.
+    * **Frequency Count (Suggestions):** Count the number of reviews mentioning each suggestion group.
+    * **Prioritization (Suggestions):** Rank suggestion groups by frequency. Estimate impact (High, Medium, Low) based on review context.
+    * **Example Reviews (Suggestions):** For top suggestion groups, provide 1-2 example 'content' excerpts.
+    * **Emerging Suggestions Trend:** Identify any *new* suggestion groups that appear in later reviews (based on 'at' date).
+    * **Implementation Difficulty:** Estimate difficulty level (Easy, Medium, Hard) for each suggestion group.
 
-Bugs/Glitches
+3. **Sentiment Trend Analysis:**
+    * **Sentiment Evolution:** Track the overall sentiment (positive, negative, neutral) of reviews over time.
+    * **Provide monthly or quarterly sentiment summary if possible.**
+    * **Identify specific events or updates that might have affected sentiment.**
 
-Feature Issues (missing features, poorly implemented features, etc.)
+4. **Audience Segmentation (Optional):**
+    * **User Type Analysis:** If possible, categorize users into groups based on their reviews (e.g., "Power Users", "Casual Users", "New Users").
+    * **Segment-Specific Issues:** Identify problems that affect specific user segments more than others.
 
-Performance Problems (slowness, crashes, battery drain, etc.)
+**Output Requirements:**
 
-Usability Issues (poor interface, confusing navigation, etc.)
+* **Format:** Return output in the exact JSON format specified below.
+* **Structure:** Follow this schema precisely, including all fields:
 
-Content/Quality Issues (errors, inaccuracies, etc.)
+```json
+{
+  "executive_summary": "A concise 3-5 sentence summary of the major findings and recommendations",
+  "problem_analysis": {
+    "table": [
+      {
+        "category": "Bug/Glitch",
+        "frequency": 32,
+        "severity": "Critical", 
+        "example_reviews": [
+          {"content": "Example review text here", "at": "2023-10-26"},
+          {"content": "Second example review", "at": "2023-09-15"}
+        ],
+        "trend": "Increasing",
+        "affected_user_segments": ["Power Users", "New Users"]
+      }
+    ],
+    "trend_summary": "Text summary of problem trends over time.",
+    "critical_problems_count": 2,
+    "most_affected_segments": ["New Users"]
+  },
+  "suggestion_analysis": {
+    "table": [
+      {
+        "suggestion_group": "Improved Search",
+        "frequency": 45,
+        "estimated_impact": "High",
+        "implementation_difficulty": "Medium",
+        "example_reviews": [
+          {"content": "Example suggestion review text"},
+          {"content": "Second example suggestion review"}
+        ]
+      }
+    ],
+    "emerging_suggestions": "Text summary of emerging suggestions that appeared recently.",
+    "high_impact_count": 3,
+    "quick_wins": ["Brief description of high-impact, low-difficulty suggestions"]
+  },
+  "sentiment_trend_analysis": {
+    "summary": "Overall text summary of sentiment trends",
+    "period_trends": [
+      {"period": "2023 Q1", "positive_percentage": 60, "negative_percentage": 25, "neutral_percentage": 15},
+      {"period": "2023 Q2", "positive_percentage": 55, "negative_percentage": 30, "neutral_percentage": 15}
+    ],
+    "significant_events": [
+      {"date": "2023-03-15", "event": "App update v2.0", "sentiment_impact": "Negative"},
+      {"date": "2023-06-01", "event": "Bug fix release", "sentiment_impact": "Positive"}
+    ]
+  },
+  "user_segments": {
+    "identified_segments": ["Power Users", "Casual Users", "New Users"],
+    "segment_specific_issues": [
+      {"segment": "New Users", "top_issues": ["Onboarding Problems", "Feature Discovery"]}
+    ]
+  },
+  "actionable_insights": [
+    "First specific, actionable recommendation based on the data",
+    "Second specific, actionable recommendation",
+    "Third specific, actionable recommendation"
+  ]
+}
+```
 
-Other Issues (specify)
-
-Frequency Analysis: Calculate and present the frequency of each problem category.
-
-Example Reviews: For each category, select 2-3 representative example reviews, including the 'at' date for context.
-
-Time-Based Trend Analysis: Using the 'at' column, analyze if specific problems are increasing, decreasing, or remaining constant over time. Identify trends in problem reporting.
-
-Suggestion & Feature Request Analysis:
-
-Suggestion Extraction and Grouping: Extract all suggestions and feature requests from the reviews (regardless of sentiment) and group them into logical themes (e.g., "New Payment Options," "Improved Search Functionality," "Customization Features").
-
-Prioritization: Rank or prioritize these suggestions based on:
-
-Frequency of mentions across reviews
-
-Impact on user experience (if it can be reasonably estimated)
-
-Example Reviews: Include example review excerpts illustrating the most popular and impactful suggestions.
-
-Emerging Suggestion Analysis: Track if new suggestions appear over time.
-
-Output and Reporting:
-
-Structured Report: Generate a report that includes:
-
-Executive Summary: A concise overview of the key findings and recommendations.
-
-Problem Analysis Table: A table listing problem categories, frequency, example reviews (with dates), and a visual representation of time-based trends (e.g., a simple line chart or bar chart, if applicable).
-
-Suggestion Analysis Table: A table listing grouped suggestions, frequency, estimated impact, and example reviews.
-
-Trend Analysis Section: A written summary highlighting any important trends or patterns in problem reports or suggestions over time.
-
-Actionable Insights: A list of concrete recommendations for development teams based on the analysis.
-
-Visualization: If feasible, use basic charts (e.g., bar charts for problem category frequencies) or trend graphs to visually represent data and insights.
-
-Clear and Concise Language: Use plain language suitable for developers and product stakeholders.
-
-Bonus Points:
-
-Sentiment Score Refinement: If the content analysis provides more accurate sentiment, consider using that instead of the existing 'score' column.
-
-Sentiment Evolution Table: A table showing the evolution of positive, negative and neutral sentiments overtime
-
-Impact of Changes: If the 'at' column has a granularity that enables identifying impact of app updates (or similar), try to correlate app updates to sentiment and problem changes
-
-Example Output Snippets (Illustrative):
-
-Problem Analysis Table:
-
-Category	Frequency	Example Review (Date)	Trend Over Time
-Bugs/Glitches	32	"App crashed repeatedly after the update." (2023-10-26) "Data loss issues." (2023-10-27)	Increasing
-Feature Issues	25	"The search function doesn't work properly." (2023-10-20)	Stable
-Suggestion Analysis Table:
-
-Suggestion Group	Frequency	Estimated Impact	Example Review
-Improved Search	45	High	"Needs a better way to find what I need."
-New Payment Options	30	Medium	"Add PayPal support!"
-Key Considerations for Implementation:
-
-Assume the 'content' column is the primary source for text analysis.
-
-Sentiment analysis will be used to determine whether a review is positive, negative or neutral, not relying on the given score.
+**Important Notes:**
+1. Focus on providing accurate, insightful analysis rather than just extracting keywords.
+2. Ensure the analysis is based on actual review content, not just ratings.
+3. Keep all text fields concise and specific - focus on insights that would be valuable to product managers and developers.
+4. Ensure your response EXACTLY follows the specified JSON format - this is essential for proper processing by the application.
+5. If a section has no data, include it as an empty array or with minimal placeholder text rather than omitting the field.
